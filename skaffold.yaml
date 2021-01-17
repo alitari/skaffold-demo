@@ -1,0 +1,53 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+build:
+  artifacts:
+  - image: go-webclient
+    context: go-webclient
+    docker:
+      dockerfile: Dockerfile
+  - image: go-webserver
+    context: go-webserver
+    docker:
+      dockerfile: Dockerfile
+  local:
+    push: false
+deploy:
+  helm:
+    releases:
+    - name: go-webclient
+      chartPath: go-webclient/charts
+      artifactOverrides:
+        image: go-webclient
+      valuesFiles:
+        - go-webclient/go-webclient-dev-values.yaml
+    - name: go-webserver
+      chartPath: go-webserver/charts
+      artifactOverrides:
+        image: go-webserver
+      valuesFiles:
+        - go-webserver/go-webserver-dev-values.yaml
+profiles:
+- name: local-dev
+  activation:
+  - kubeContext: docker-desktop
+- name: local-prod
+  patches:
+  - op: replace
+    path: /deploy/helm/releases/0/valuesFiles/0
+    value: go-webclient/go-webclient-prod-values.yaml
+- name: cloud-dev
+  build:
+    artifacts:
+    - image: docker.io/alitari/go-webclient
+      context: go-webclient
+      kaniko:
+        noPush: false
+        dockerfile: Dockerfile
+        cache:
+          repo: docker.io/alitari/go-webclient
+    cluster:
+      pullSecretName: regcred
+      namespace: default
+      dockerConfig:
+        secretName: kaniko-secret

@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Skaffold example with Helm
+name: go-webserver
+version: 0.1.0
