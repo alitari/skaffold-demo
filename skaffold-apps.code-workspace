@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "spring-webserver",
+			"path": "spring-webserver"
+		},
+		{
+			"name": "go-webserver",
+			"path": "go-webserver"
+		},
+		{
+			"name": "go-webclient",
+			"path": "go-webclient"
+		}
+	],
+	"settings": {}
+}

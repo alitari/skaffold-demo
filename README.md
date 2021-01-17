@@ -1,11 +1,18 @@
 # skaffold example
 
-## local dev-cycle
-
+## local
 The profile must set to `local`.
 
+### build
+
 ```bash
-# build
+skaffold build
+```
+
+###  dev-cycle
+
+
+```bash
 skaffold dev -p local
 ```
 

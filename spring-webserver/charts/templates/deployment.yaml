@@ -4,6 +4,7 @@ metadata:
   name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
 spec:
   selector:
     matchLabels:
@@ -13,6 +14,7 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
+        release: {{ .Release.Name }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
@@ -20,5 +22,5 @@ spec:
         env:
           - name: VERSION
             value: {{ .Values.version }}
-          - name: URLS
-            value: {{ .Values.urls }}
+        ports:
+          - containerPort: 8080

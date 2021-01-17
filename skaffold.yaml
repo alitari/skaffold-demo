@@ -10,6 +10,10 @@ build:
     context: go-webserver
     docker:
       dockerfile: Dockerfile
+  - image: spring-webserver
+    context: spring-webserver
+    docker:
+      dockerfile: Dockerfile
   local:
     push: false
 deploy:
@@ -27,6 +31,12 @@ deploy:
         image: go-webserver
       valuesFiles:
         - go-webserver/go-webserver-dev-values.yaml
+    - name: spring-webserver
+      chartPath: spring-webserver/charts
+      artifactOverrides:
+        image: spring-webserver
+      valuesFiles:
+        - spring-webserver/spring-webserver-dev-values.yaml
 profiles:
 - name: local-dev
   activation:
@@ -36,6 +46,12 @@ profiles:
   - op: replace
     path: /deploy/helm/releases/0/valuesFiles/0
     value: go-webclient/go-webclient-prod-values.yaml
+  - op: replace
+    path: /deploy/helm/releases/1/valuesFiles/0
+    value: go-webclient/go-webserver-prod-values.yaml
+  - op: replace
+    path: /deploy/helm/releases/2/valuesFiles/0
+    value: spring-webserver/spring-webserver-prod-values.yaml
 - name: cloud-dev
   build:
     artifacts:
@@ -46,6 +62,20 @@ profiles:
         dockerfile: Dockerfile
         cache:
           repo: docker.io/alitari/go-webclient
+    - image: docker.io/alitari/go-webserver
+      context: go-webserver
+      kaniko:
+        noPush: false
+        dockerfile: Dockerfile
+        cache:
+          repo: docker.io/alitari/go-webserver
+    - image: docker.io/alitari/spring-webserver
+      context: spring-webserver
+      kaniko:
+        noPush: false
+        dockerfile: Dockerfile
+        cache:
+          repo: docker.io/alitari/spring-webserver
     cluster:
       pullSecretName: regcred
       namespace: default
