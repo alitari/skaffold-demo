@@ -14,5 +14,5 @@ func greetHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     http.HandleFunc("/", greetHandler)
-    log.Fatal(http.ListenAndServe("0.0.0.0:7777", nil))
+    log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
 }
