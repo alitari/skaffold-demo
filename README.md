@@ -41,4 +41,6 @@ EOF
 
 kubectl create secret generic kaniko-secret --from-file=config.json
 
+# build and push from k8s to dockerhub
+skaffold build -p cloud-dev
 ```
